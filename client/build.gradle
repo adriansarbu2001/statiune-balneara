@@ -11,7 +11,7 @@ repositories {
 }
 
 application {
-    mainClass = 'org.example.StartClient'
+    mainClass = 'client.StartClient'
 }
 
 dependencies {
