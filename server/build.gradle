@@ -11,10 +11,13 @@ repositories {
 }
 
 application {
-    mainClass = 'server.StartServer'
+    mainClass = 'server.Server'
 }
 
 dependencies {
+    implementation project(':model')
+    implementation project(':repository')
+
     implementation 'org.springframework:spring-context:5.3.15'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'

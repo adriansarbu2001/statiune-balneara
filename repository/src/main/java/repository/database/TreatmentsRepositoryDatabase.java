@@ -1,7 +1,6 @@
 package repository.database;
 
 import model.Treatment;
-import org.springframework.stereotype.Component;
 import repository.TreatmentsRepository;
 import repository.utils.JdbcUtils;
 
@@ -13,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Database containing users
- */
-@Component
 public class TreatmentsRepositoryDatabase implements TreatmentsRepository {
     private JdbcUtils dbUtils;
 
