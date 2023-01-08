@@ -1,7 +1,6 @@
 package repository.database;
 
 import model.Planification;
-import org.springframework.stereotype.Component;
 import repository.PlanificationsRepository;
 import repository.utils.JdbcUtils;
 
@@ -12,10 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Database containing users
- */
-@Component
 public class PlanificationsRepositoryDatabase implements PlanificationsRepository {
     private JdbcUtils dbUtils;
 
@@ -97,7 +92,7 @@ public class PlanificationsRepositoryDatabase implements PlanificationsRepositor
         List<Planification> planifications = new ArrayList<>();
         try {
             PreparedStatement statement = con.prepareStatement
-                    ("SELECT * FROM Plati");
+                    ("SELECT * FROM Planificari");
 
             ResultSet result = statement.executeQuery();
             while (result.next()) {

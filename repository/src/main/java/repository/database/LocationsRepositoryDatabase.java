@@ -1,7 +1,6 @@
 package repository.database;
 
 import model.Location;
-import org.springframework.stereotype.Component;
 import repository.LocationsRepository;
 import repository.utils.JdbcUtils;
 
@@ -13,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Database containing users
- */
-@Component
 public class LocationsRepositoryDatabase implements LocationsRepository {
     private JdbcUtils dbUtils;
 
@@ -47,7 +42,7 @@ public class LocationsRepositoryDatabase implements LocationsRepository {
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                String name = result.getString("name");
+                String name = result.getString("nume");
                 location = new Location(id, name);
             }
             result.close();
@@ -73,7 +68,7 @@ public class LocationsRepositoryDatabase implements LocationsRepository {
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 int id = result.getInt("idl");
-                String name = result.getString("name");
+                String name = result.getString("nume");
 
                 Location location = new Location(id, name);
                 locations.add(location);

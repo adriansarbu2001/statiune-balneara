@@ -1,7 +1,6 @@
 package repository.database;
 
 import model.Treatment;
-import org.springframework.stereotype.Component;
 import repository.TreatmentsRepository;
 import repository.utils.JdbcUtils;
 
@@ -13,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Database containing users
- */
-@Component
 public class TreatmentsRepositoryDatabase implements TreatmentsRepository {
     private JdbcUtils dbUtils;
 
@@ -47,7 +42,7 @@ public class TreatmentsRepositoryDatabase implements TreatmentsRepository {
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                String name = result.getString("name");
+                String name = result.getString("nume");
                 int cost = result.getInt("cost");
                 int duration_minutes = result.getInt("durata_minute");
                 int max_patients = result.getInt("max_pacienti");
@@ -76,7 +71,7 @@ public class TreatmentsRepositoryDatabase implements TreatmentsRepository {
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 int id = result.getInt("id");
-                String name = result.getString("name");
+                String name = result.getString("nume");
                 int cost = result.getInt("cost");
                 int duration_minutes = result.getInt("durata_minute");
                 int max_patients = result.getInt("max_pacienti");
