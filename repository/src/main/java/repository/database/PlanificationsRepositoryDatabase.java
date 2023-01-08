@@ -92,7 +92,7 @@ public class PlanificationsRepositoryDatabase implements PlanificationsRepositor
         List<Planification> planifications = new ArrayList<>();
         try {
             PreparedStatement statement = con.prepareStatement
-                    ("SELECT * FROM Plati");
+                    ("SELECT * FROM Planificari");
 
             ResultSet result = statement.executeQuery();
             while (result.next()) {

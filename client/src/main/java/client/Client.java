@@ -15,22 +15,26 @@ public class Client {
         try {
             Socket soc = new Socket("localhost", 8080);
 
-            ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
-            DataInputStream in = new DataInputStream(soc.getInputStream());
-
+            // Create a planification
             Planification p = new Planification(0, "Dorel", "5070921647382", LocalDate.now(), 2, 1, LocalDate.of(2023, 1, 15), LocalTime.of(12, 0, 0));
-            out.writeObject(p);
 
+            // Send planification to server
+            ObjectOutputStream out = new ObjectOutputStream(soc.getOutputStream());
+            out.writeObject(p);
             out.flush();
 
-            System.out.println(in.readUTF());
+            // Read the response message and print it
+            DataInputStream in = new DataInputStream(soc.getInputStream());
+            String response = in.readUTF();
+            System.out.println(response);
 
+            // Close everything
             in.close();
             out.close();
-
             soc.close();
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

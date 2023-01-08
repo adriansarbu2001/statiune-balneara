@@ -17,18 +17,18 @@ import java.util.concurrent.Callable;
 import java.time.LocalTime;
 
 public class ServiceCallable implements Callable<String> {
+    private final Object command;
     private final LocationsRepository locationsRepository;
     private final PaymentsRepository paymentsRepository;
     private final PlanificationsRepository planificationsRepository;
     private final TreatmentsRepository treatmentsRepository;
-    private final Socket socket;
 
-    public ServiceCallable(LocationsRepository locationsRepository, PaymentsRepository paymentsRepository, PlanificationsRepository planificationsRepository, TreatmentsRepository treatmentsRepository, Socket connection) {
+    public ServiceCallable(Object command, LocationsRepository locationsRepository, PaymentsRepository paymentsRepository, PlanificationsRepository planificationsRepository, TreatmentsRepository treatmentsRepository) {
+        this.command = command;
         this.locationsRepository = locationsRepository;
         this.paymentsRepository = paymentsRepository;
         this.planificationsRepository = planificationsRepository;
         this.treatmentsRepository = treatmentsRepository;
-        this.socket = connection;
     }
 
     public static boolean areOverlaping(LocalTime t1, int d1, LocalTime t2, int d2) {
@@ -36,43 +36,41 @@ public class ServiceCallable implements Callable<String> {
     }
 
     public synchronized String call() throws Exception {
-        ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-
-        Object object = objectInputStream.readObject();
-        objectInputStream.close();
-        if (object instanceof Planification planification) {
+        if (command instanceof Planification planification) {
             Treatment t2 = treatmentsRepository.find(planification.getIdt());
             Location l2 = locationsRepository.find(planification.getIdl());
             int d2 = t2.getDurationMinutes();
-            int contor = 0;
+
+            int count = 0;
+
             for (Planification el : this.planificationsRepository.getAll()) {
                 Treatment t1 = treatmentsRepository.find(el.getIdt());
                 Location l1 = locationsRepository.find(el.getIdl());
                 int d1 = t1.getDurationMinutes();
 
-                if (el.getTreatmentDate() == planification.getTreatmentDate() && l1.getId() == l2.getId() && areOverlaping(el.getTreatmentTime(), d1, planification.getTreatmentTime(), d2)) {
-                    contor++;
+                // if the planification is in the same location and at the same treatment
+                if (l1.getId() == l2.getId() && t1.getId() == t2.getId()) {
+
+                    // if the planification is at the same date and at the same time
+                    if (el.getTreatmentDate().isEqual(planification.getTreatmentDate()) && areOverlaping(el.getTreatmentTime(), d1, planification.getTreatmentTime(), d2)) {
+
+                        // count how many planifications are overlaping
+                        count += 1;
+                    }
                 }
             }
 
-            String toReturn;
-            if (contor < t2.getMaxPatients()) {
+            // if more planifications are overlaping than the maximum number of patients that can be accepted at the same time, then the planification is unsuccessful
+            if (count < t2.getMaxPatients()) {
                 planificationsRepository.add(planification);
-                System.out.println("REUSITA");
-                toReturn = "programare reusita";
+                return "programare reusita";
             } else {
-                System.out.println("NEREUSIT");
-                toReturn = "programare nereusita";
+                return "programare nereusita";
             }
+        } else if (command instanceof Payment payment) {
 
-            try {
-                socket.close();
-            } catch (IOException ioe) {
-                System.out.println("Error closing client connection");
-            }
-            return toReturn;
-        } else if (object instanceof Payment payment) {
             return "Not implemented!";
+
         } else {
             return "Comanda necunoscuta!";
         }

@@ -42,7 +42,7 @@ public class LocationsRepositoryDatabase implements LocationsRepository {
             statement.setInt(1, id);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                String name = result.getString("name");
+                String name = result.getString("nume");
                 location = new Location(id, name);
             }
             result.close();
@@ -68,7 +68,7 @@ public class LocationsRepositoryDatabase implements LocationsRepository {
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 int id = result.getInt("idl");
-                String name = result.getString("name");
+                String name = result.getString("nume");
 
                 Location location = new Location(id, name);
                 locations.add(location);

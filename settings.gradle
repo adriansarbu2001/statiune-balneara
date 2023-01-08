@@ -1,6 +1,6 @@
 rootProject.name = 'statiune-balneara'
-include 'client'
-include 'server'
 include 'model'
 include 'repository'
+include 'server'
+include 'client'
 

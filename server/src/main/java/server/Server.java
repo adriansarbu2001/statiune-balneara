@@ -10,13 +10,11 @@ import repository.database.PaymentsRepositoryDatabase;
 import repository.database.PlanificationsRepositoryDatabase;
 import repository.database.TreatmentsRepositoryDatabase;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -49,14 +47,17 @@ class Server {
     }
 
     public static void main(String[] args) {
+        // Create the repos
         Properties props = createJdbcValues();
-
         LocationsRepository r1 = new LocationsRepositoryDatabase(props);
         PaymentsRepository r2 = new PaymentsRepositoryDatabase(props);
         PlanificationsRepository r3 = new PlanificationsRepositoryDatabase(props);
         TreatmentsRepository r4 = new TreatmentsRepositoryDatabase(props);
 
+        // Create the server
         Server server = new Server(r1, r2, r3, r4);
+
+        // Run the server
         try {
             server.run();
         } catch (Exception e) {
@@ -64,20 +65,34 @@ class Server {
         }
     }
 
-    private void run() throws IOException, ExecutionException, InterruptedException {
+    private void run() throws Exception {
         ServerSocket socket = new ServerSocket(8080);
         System.out.println("Server started on port 8080");
         while (true) {
             final Socket connection = socket.accept();
             this.handleRequest(connection);
-            connection.close();
         }
     }
 
-    private void handleRequest(Socket connection) throws IOException, ExecutionException, InterruptedException {
-        Future<String> result = executorService.submit(new ServiceCallable(this.locationsRepository, this.paymentsRepository, this.planificationsRepository, this.treatmentsRepository, connection));
+    private void handleRequest(Socket connection) throws Exception {
+        // Read the object from client
+        ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
+        Object command = in.readObject();
+
+        // Do the work and get the result
+        Future<String> result = executorService.submit(new ServiceCallable(command, this.locationsRepository, this.paymentsRepository, this.planificationsRepository, this.treatmentsRepository));
+        String res = result.get();
+        System.out.println();
+        System.out.println(res);
+
+        // Send the result to client
         DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-        out.writeUTF(result.get());
+        out.writeUTF(res);
+        out.flush();
+
+        // Close everything
         out.close();
+        in.close();
+        connection.close();
     }
 }
