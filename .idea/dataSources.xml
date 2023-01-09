@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="database" uuid="dcc207d9-07ac-4267-a1fa-1039593fcf15">
-      <driver-ref>sqlite.xerial</driver-ref>
+      <driver-ref>666960f7-a49f-4cfe-b744-521a18b5168b</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\UBB\SEM_V\PPD\Lab\Lab6\statiune-balneara\database.db</jdbc-url>
@@ -13,6 +13,18 @@
         </library>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.36.0.3/sqlite-jdbc-3.36.0.3.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="database [2]" uuid="9d5469c5-e309-48f4-b424-de49d7270a31">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\A.FMI-UBB\Semestrul5\PPD\p1-statiune-balneara\statiune-balneara\database.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.34.0/sqlite-jdbc-3.34.0.jar</url>
         </library>
       </libraries>
     </data-source>

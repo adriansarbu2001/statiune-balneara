@@ -51,6 +51,24 @@ public class LocationsRepositoryDatabase implements LocationsRepository {
         }
         return location;
     }
+    //method to get a random location
+    public Location findRandomLocation() throws Exception {
+        Connection con = dbUtils.getConnection();
+        Location location = null;
+        try {
+            PreparedStatement statement = con.prepareStatement("SELECT * FROM Locatii ORDER BY RAND() LIMIT 1");
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                int id = result.getInt("idl");
+                String name = result.getString("nume");
+                location = new Location(id, name);
+            }
+            result.close();
+        } catch (SQLException ex) {
+            throw new Exception("Error finding location!");
+        }
+        return location;
+    }
 
     @Override
     public Location update(Location e) {
