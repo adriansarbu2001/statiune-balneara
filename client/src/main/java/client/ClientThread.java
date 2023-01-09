@@ -11,11 +11,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Random;
 
-public class ClientThread extends Thread{
+public class ClientThread extends Thread {
     @Override
     public void run() {
-        // A client who send 10 requests
-        for (int i = 1; i <= 2; i++) {
+        int n = 2;
+        // A client who send n requests
+        for (int i = 1; i <= n; i++) {
             System.out.println("client start");
             try {
                 Socket soc = new Socket("localhost", 8080);

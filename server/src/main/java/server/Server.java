@@ -7,9 +7,7 @@ import repository.database.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 class Server {
     private static final int p = 10;
@@ -63,6 +61,10 @@ class Server {
     private void run() throws Exception {
         ServerSocket socket = new ServerSocket(8080);
         System.out.println("Server started on port 8080");
+
+        ScheduledExecutorService validationExecutor = Executors.newScheduledThreadPool(1);
+        validationExecutor.scheduleAtFixedRate(new ValidationRunnable(this.locationsRepository, this.paymentsRepository, this.planificationsRepository, this.treatmentsRepository, this.maxPatientsRepository), 0, 5, TimeUnit.SECONDS);
+
         while (true) {
             final Socket connection = socket.accept();
             this.handleRequest(connection);
