@@ -45,31 +45,7 @@ public class TreatmentsRepositoryDatabase implements TreatmentsRepository {
                 String name = result.getString("nume");
                 int cost = result.getInt("cost");
                 int duration_minutes = result.getInt("durata_minute");
-                int max_patients = result.getInt("max_pacienti");
-                treatment = new Treatment(id, name, cost, duration_minutes, max_patients);
-            }
-            result.close();
-        } catch (SQLException ex) {
-            throw new Exception("Error finding treatment!");
-        }
-        return treatment;
-    }
-
-    //method to get a random treatment
-    public Treatment findRandomTreatment() throws Exception {
-        Connection con = dbUtils.getConnection();
-        Treatment treatment = null;
-        try {
-            PreparedStatement statement = con.prepareStatement("SELECT * FROM Tratamente ORDER BY RAND() LIMIT 1");
-            //statement.setInt(1, id);
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                int id = result.getInt("idt");
-                String name = result.getString("nume");
-                int cost = result.getInt("cost");
-                int duration_minutes = result.getInt("durata_minute");
-                int max_patients = result.getInt("max_pacienti");
-                treatment = new Treatment(id, name, cost, duration_minutes, max_patients);
+                treatment = new Treatment(id, name, cost, duration_minutes);
             }
             result.close();
         } catch (SQLException ex) {
@@ -97,9 +73,8 @@ public class TreatmentsRepositoryDatabase implements TreatmentsRepository {
                 String name = result.getString("nume");
                 int cost = result.getInt("cost");
                 int duration_minutes = result.getInt("durata_minute");
-                int max_patients = result.getInt("max_pacienti");
 
-                Treatment treatment = new Treatment(id, name, cost, duration_minutes, max_patients);
+                Treatment treatment = new Treatment(id, name, cost, duration_minutes);
                 treatments.add(treatment);
             }
             result.close();

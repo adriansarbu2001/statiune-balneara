@@ -3,11 +3,6 @@ package model;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-/**
- * Class that represents a review
- * The review has: id, userId representing the user that made the review
- *                 productId representing the product which is reviewing
- */
 public class Payment implements Serializable {
     private int id;
     private String cnp;

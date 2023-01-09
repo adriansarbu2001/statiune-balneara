@@ -4,11 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-/**
- * Class that represents a review
- * The review has: id, userId representing the user that made the review
- *                 productId representing the product which is reviewing
- */
 public class Planification implements Serializable {
     private int id;
     private String name;
