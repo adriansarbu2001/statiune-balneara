@@ -1,17 +1,9 @@
 package server;
 
 import org.springframework.core.io.ClassPathResource;
-import repository.LocationsRepository;
-import repository.PaymentsRepository;
-import repository.PlanificationsRepository;
-import repository.TreatmentsRepository;
-import repository.database.LocationsRepositoryDatabase;
-import repository.database.PaymentsRepositoryDatabase;
-import repository.database.PlanificationsRepositoryDatabase;
-import repository.database.TreatmentsRepositoryDatabase;
+import repository.*;
+import repository.database.*;
 
-import java.io.DataOutputStream;
-import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
@@ -26,12 +18,14 @@ class Server {
     private PaymentsRepository paymentsRepository;
     private PlanificationsRepository planificationsRepository;
     private TreatmentsRepository treatmentsRepository;
+    private MaxPatientsRepository maxPatientsRepository;
 
-    public Server(LocationsRepository locationsRepository, PaymentsRepository paymentsRepository, PlanificationsRepository planificationsRepository, TreatmentsRepository treatmentsRepository) {
+    public Server(LocationsRepository locationsRepository, PaymentsRepository paymentsRepository, PlanificationsRepository planificationsRepository, TreatmentsRepository treatmentsRepository, MaxPatientsRepository maxPatientsRepository) {
         this.locationsRepository = locationsRepository;
         this.paymentsRepository = paymentsRepository;
         this.planificationsRepository = planificationsRepository;
         this.treatmentsRepository = treatmentsRepository;
+        this.maxPatientsRepository = maxPatientsRepository;
         this.executorService = Executors.newFixedThreadPool(p);
     }
 
@@ -53,9 +47,10 @@ class Server {
         PaymentsRepository r2 = new PaymentsRepositoryDatabase(props);
         PlanificationsRepository r3 = new PlanificationsRepositoryDatabase(props);
         TreatmentsRepository r4 = new TreatmentsRepositoryDatabase(props);
+        MaxPatientsRepository r5 = new MaxPatientsRepositoryDatabase(props);
 
         // Create the server
-        Server server = new Server(r1, r2, r3, r4);
+        Server server = new Server(r1, r2, r3, r4, r5);
 
         // Run the server
         try {
@@ -75,24 +70,7 @@ class Server {
     }
 
     private void handleRequest(Socket connection) throws Exception {
-        // Read the object from client
-        ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
-        Object command = in.readObject();
-
         // Do the work and get the result
-        Future<String> result = executorService.submit(new ServiceCallable(command, this.locationsRepository, this.paymentsRepository, this.planificationsRepository, this.treatmentsRepository));
-        String res = result.get();
-        System.out.println();
-        System.out.println(res);
-
-        // Send the result to client
-        DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-        out.writeUTF(res);
-        out.flush();
-
-        // Close everything
-        out.close();
-        in.close();
-        connection.close();
+        executorService.execute(new ServiceRunnable(connection, this.locationsRepository, this.paymentsRepository, this.planificationsRepository, this.treatmentsRepository, this.maxPatientsRepository));
     }
 }

@@ -2,26 +2,19 @@ package model;
 
 import java.io.Serializable;
 
-/**
- * Class that represents a review
- * The review has: id, userId representing the user that made the review
- *                 productId representing the product which is reviewing
- */
 public class Treatment implements Serializable {
     private int id;
     private String name;
     private int cost;
     private int durationMinutes;
-    private int maxPatients;
 
     public Treatment() {}
 
-    public Treatment(int id, String name, int cost, int durationMinutes, int maxPatients) {
+    public Treatment(int id, String name, int cost, int durationMinutes) {
         this.id = id;
         this.name = name;
         this.cost = cost;
         this.durationMinutes = durationMinutes;
-        this.maxPatients = maxPatients;
     }
 
     public int getId() {
@@ -54,13 +47,5 @@ public class Treatment implements Serializable {
 
     public void setDurationMinutes(int durationMinutes) {
         this.durationMinutes = durationMinutes;
-    }
-
-    public int getMaxPatients() {
-        return maxPatients;
-    }
-
-    public void setMaxPatients(int maxPatients) {
-        this.maxPatients = maxPatients;
     }
 }

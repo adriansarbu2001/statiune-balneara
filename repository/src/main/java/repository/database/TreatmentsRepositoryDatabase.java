@@ -45,8 +45,7 @@ public class TreatmentsRepositoryDatabase implements TreatmentsRepository {
                 String name = result.getString("nume");
                 int cost = result.getInt("cost");
                 int duration_minutes = result.getInt("durata_minute");
-                int max_patients = result.getInt("max_pacienti");
-                treatment = new Treatment(id, name, cost, duration_minutes, max_patients);
+                treatment = new Treatment(id, name, cost, duration_minutes);
             }
             result.close();
         } catch (SQLException ex) {
@@ -74,9 +73,8 @@ public class TreatmentsRepositoryDatabase implements TreatmentsRepository {
                 String name = result.getString("nume");
                 int cost = result.getInt("cost");
                 int duration_minutes = result.getInt("durata_minute");
-                int max_patients = result.getInt("max_pacienti");
 
-                Treatment treatment = new Treatment(id, name, cost, duration_minutes, max_patients);
+                Treatment treatment = new Treatment(id, name, cost, duration_minutes);
                 treatments.add(treatment);
             }
             result.close();
