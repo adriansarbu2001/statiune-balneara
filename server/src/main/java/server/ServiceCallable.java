@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 
 import java.time.LocalTime;
 
-public class ServiceRunnable implements Runnable {
+public class ServiceCallable implements Callable<String> {
     private final Socket connection;
     private final ObjectInputStream objIn;
     private final DataOutputStream dataOut;
@@ -24,7 +24,7 @@ public class ServiceRunnable implements Runnable {
     private final TreatmentsRepository treatmentsRepository;
     private final MaxPatientsRepository maxPatientsRepository;
 
-    public ServiceRunnable(Socket connection, LocationsRepository locationsRepository, PaymentsRepository paymentsRepository, PlanificationsRepository planificationsRepository, TreatmentsRepository treatmentsRepository, MaxPatientsRepository maxPatientsRepository) throws IOException {
+    public ServiceCallable(Socket connection, LocationsRepository locationsRepository, PaymentsRepository paymentsRepository, PlanificationsRepository planificationsRepository, TreatmentsRepository treatmentsRepository, MaxPatientsRepository maxPatientsRepository) throws IOException {
         this.connection = connection;
         this.locationsRepository = locationsRepository;
         this.paymentsRepository = paymentsRepository;
@@ -40,8 +40,8 @@ public class ServiceRunnable implements Runnable {
         return t1.isBefore(t2.plusMinutes(d2)) || t2.plusMinutes(d1).isAfter(t2);
     }
 
-    public synchronized void run() {
-        String res;
+    public synchronized String call() {
+        String res = "";
         try {
             // Read the object from client
             Object command = objIn.readObject();
@@ -111,5 +111,7 @@ public class ServiceRunnable implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return res;
     }
 }

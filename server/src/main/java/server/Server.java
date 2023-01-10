@@ -73,6 +73,7 @@ class Server {
 
     private void handleRequest(Socket connection) throws Exception {
         // Do the work and get the result
-        executorService.execute(new ServiceRunnable(connection, this.locationsRepository, this.paymentsRepository, this.planificationsRepository, this.treatmentsRepository, this.maxPatientsRepository));
+        Future<String> result = executorService.submit(new ServiceCallable(connection, this.locationsRepository, this.paymentsRepository, this.planificationsRepository, this.treatmentsRepository, this.maxPatientsRepository));
+        System.out.println(result.get());
     }
 }
